@@ -1,0 +1,31 @@
+Running tests...
+[==========] Running 8 tests from 3 test cases.
+[----------] Global test environment set-up.
+[----------] 4 tests from BTree3Test
+[ RUN      ] BTree3Test.Add
+[       OK ] BTree3Test.Add (0 ms)
+[ RUN      ] BTree3Test.Remove
+[       OK ] BTree3Test.Remove (1 ms)
+[ RUN      ] BTree3Test.EmptyRemove
+[       OK ] BTree3Test.EmptyRemove (0 ms)
+[ RUN      ] BTree3Test.BigTest
+[       OK ] BTree3Test.BigTest (0 ms)
+[----------] 4 tests from BTree3Test (1 ms total)
+
+[----------] 3 tests from BTree4Test
+[ RUN      ] BTree4Test.BigTest
+[       OK ] BTree4Test.BigTest (0 ms)
+[ RUN      ] BTree4Test.EmptyRemove
+[       OK ] BTree4Test.EmptyRemove (0 ms)
+[ RUN      ] BTree4Test.RandomTest
+[       OK ] BTree4Test.RandomTest (1 ms)
+[----------] 3 tests from BTree4Test (1 ms total)
+
+[----------] 1 test from BTree2Test
+[ RUN      ] BTree2Test.BigTest
+[       OK ] BTree2Test.BigTest (0 ms)
+[----------] 1 test from BTree2Test (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 8 tests from 3 test cases ran. (2 ms total)
+[  PASSED  ] 8 tests.
