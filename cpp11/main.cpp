@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <chrono>
 #include <thread>
-#include <thread>
 #include "BTree.h"
 
 int main() {
