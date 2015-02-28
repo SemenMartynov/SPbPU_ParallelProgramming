@@ -51,10 +51,10 @@ int main() {
 
 	// Create and run children
 	for (int i = 0; i != thread_num; ++i) {
-		// obtain a seed from the timer
-		clock::duration seed = clock::now() - beginning;
-		generator.seed(static_cast<uint64_t>(seed.count()));
 		if (fork() == 0) { // child process
+			// obtain a seed from the timer
+			clock::duration seed = clock::now() - beginning;
+			generator.seed(static_cast<uint64_t>(seed.count()));
 			for (int j = 0; j != task_num; j++) {
 				sem_wait(&mutex);
 				int key = distribution(generator);
