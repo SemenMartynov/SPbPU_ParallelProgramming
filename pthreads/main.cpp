@@ -51,8 +51,8 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 	std::istringstream ss(argv[1]);
-	int tree_size;
-	if (!(ss >> tree_size)) {
+	int task_size;
+	if (!(ss >> task_size)) {
 		std::cout << "Invalid number " << argv[1] << std::endl;
 		exit(1);
 	}
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shufle
 
 	// threads
-	std::vector<pthread_t> threads(3);
+	std::vector<pthread_t> threads(4);
 	pthread_t inserter;
 	int tasks = 10;
 

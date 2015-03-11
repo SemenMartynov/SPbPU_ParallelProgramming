@@ -12,17 +12,17 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 	std::istringstream ss(argv[1]);
-	int tree_size;
-	if (!(ss >> tree_size)) {
+	int task_size;
+	if (!(ss >> task_size)) {
 		std::cout << "Invalid number " << argv[1] << std::endl;
 		exit(1);
 	}
 
 	std::default_random_engine generator;
-	std::uniform_int_distribution<int> distribution(0, tree_size);
+	std::uniform_int_distribution<int> distribution(0, 10000);
 	BTree tree4(4); // B-Tree with minimum degree 4
 
-	std::vector<int> keys(tree_size); // vector with tree_size ints.
+	std::vector<int> keys(10000); // vector with 10000 ints.
 	std::iota(keys.begin(), keys.end(), 0); // Fill with 0, 1, ..., 9999.
 
 	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shufle
