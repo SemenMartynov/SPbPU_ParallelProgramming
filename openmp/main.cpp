@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 	std::vector<int> keys(10000); // vector with 10000 ints.
 	std::iota(keys.begin(), keys.end(), 0); // Fill with 0, 1, ..., 9999.
 
-	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shufle
+	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shuffle
 	int nthreads, tid;
 	/* Fork a team of threads with each thread having a private tid variable */
 #pragma omp parallel private(tid)
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
 	} /* All threads join master thread and terminate */
 
-	std::random_shuffle(std::begin(keys), std::end(keys)); // the second shufle
+	std::random_shuffle(std::begin(keys), std::end(keys)); // the second shuffle
 	std::for_each(keys.begin(), keys.end(), [&tree4](int key) { // remove
 				tree4.remove(key);
 			});

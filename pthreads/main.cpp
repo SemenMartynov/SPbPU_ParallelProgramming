@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
 	pthread_rwlock_init(&rwlock, nullptr);
 
 	std::iota(keys.begin(), keys.end(), 0); // Fill with 0, 1, ..., 9999.
-	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shufle
+	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shuffle
 
 	// threads
 	std::vector<pthread_t> threads(4);

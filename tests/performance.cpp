@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 	std::vector<int> keys(10000); // vector with 10000 ints.
 	std::iota(keys.begin(), keys.end(), 0); // Fill with 0, 1, ..., 9999.
 
-	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shufle
+	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shuffle
 	std::for_each(keys.begin(), keys.end(), [&tree4](int key) { // add
 				tree4.insert(key);
 			});
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 				std::chrono::milliseconds(distribution(generator) / 2)); //sleep
 	}
 
-	std::random_shuffle(std::begin(keys), std::end(keys)); // the second shufle
+	std::random_shuffle(std::begin(keys), std::end(keys)); // the second shuffle
 	std::for_each(keys.begin(), keys.end(), [&tree4](int key) { // remove
 				tree4.remove(key);
 			});

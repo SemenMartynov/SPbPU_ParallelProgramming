@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	// The parent process waits for the semaphore capture on par with everyone.
-	std::random_shuffle(std::begin(keys), std::end(keys)); // the second shufle
+	std::random_shuffle(std::begin(keys), std::end(keys)); // the second shuffle
 	std::for_each(keys.begin(), keys.end(), [&tree4, &mutex](int key) { // remove
 				sem_wait(&mutex);
 				tree4.remove(key);
