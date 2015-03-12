@@ -59,8 +59,11 @@ int main(int argc, char* argv[]) {
 	std::iota(keys.begin(), keys.end(), 0); // Fill with 0, 1, ..., 9999.
 
 	std::random_shuffle(keys.begin(), keys.end()); // the first shuffle
-	for (auto key : keys) // add
+	for (auto key : keys) { // add
 		tree4.insert(key);
+		std::this_thread::sleep_for(
+				std::chrono::milliseconds(distribution(generator) / 16));
+	}
 
 	// Create and run children
 	for (int i = 0; i != thread_num; ++i) {
@@ -84,10 +87,11 @@ int main(int argc, char* argv[]) {
 
 	// The parent process waits for the semaphore capture on par with everyone.
 	std::random_shuffle(std::begin(keys), std::end(keys)); // the second shuffle
-	std::for_each(keys.begin(), keys.end(), [&tree4, &mutex](int key) { // remove
+	std::for_each(keys.begin(), keys.end(), [&](int key) { // remove
 				sem_wait(&mutex);
 				tree4.remove(key);
-				std::this_thread::sleep_for(std::chrono::milliseconds(10));
+				std::this_thread::sleep_for(
+						std::chrono::milliseconds(distribution(generator) / 16));
 				sem_post(&mutex);
 			});
 

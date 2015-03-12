@@ -24,14 +24,15 @@ void* check(void* param) {
 	for (int i = 0; i != tasks; ++i) {
 		pthread_rwlock_rdlock(&rwlock);
 		int key = distribution(generator);
+		std::cout << "oo! " << std::this_thread::get_id() << std::endl;
 		std::cout << "Searching for key " << key << "..." << std::endl;
 		if (tree4.exist(key)) {
 			std::cout << "Key " << key << " is found!" << std::endl;
 			std::cout.flush();
 		}
-		pthread_rwlock_unlock(&rwlock);
 		std::this_thread::sleep_for(
-				std::chrono::milliseconds(distribution(generator) / 2));
+				std::chrono::milliseconds(distribution(generator) / 2)); //sleep
+		pthread_rwlock_unlock(&rwlock);
 	}
 	return nullptr;
 }
@@ -40,17 +41,19 @@ void* insert(void* param) {
 	// feel vector
 	std::for_each(keys.begin(), keys.end(), [&](int key) {
 		pthread_rwlock_wrlock(&rwlock);
+		std::cout << "To! " << std::this_thread::get_id() << std::endl;
 		tree4.insert(key);
-		pthread_rwlock_unlock(&rwlock);
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	});
+		std::this_thread::sleep_for(
+				std::chrono::milliseconds(distribution(generator) / 16)); //sleep
+			pthread_rwlock_unlock(&rwlock);
+		});
 
 	return nullptr;
 }
 
 int main(int argc, char* argv[]) {
 	if (argc != 2) {
-		std::cout << "Too few parameters.!" << std::endl;
+		std::cout << "Too few parameters!" << std::endl;
 		exit(1);
 	}
 	std::istringstream ss(argv[1]);
@@ -65,30 +68,34 @@ int main(int argc, char* argv[]) {
 	std::iota(keys.begin(), keys.end(), 0); // Fill with 0, 1, ..., 9999.
 	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shuffle
 
-	// threads
-	std::vector<pthread_t> threads(4);
+	// Number of processor cores
+	unsigned concurentThreads = std::thread::hardware_concurrency() - 1;
+	if (concurentThreads < 1)
+		concurentThreads = 1;
+	// Threads
+	std::vector<pthread_t> threads(concurentThreads);
 	pthread_t inserter;
-	int tasks = 10;
+	int tasks = task_size / concurentThreads;
 
 	// starts threads
 	pthread_create(&inserter, NULL, insert, NULL);
-	std::this_thread::sleep_for(std::chrono::seconds(1));
 	for (auto thread : threads)
 		pthread_create(&thread, NULL, check, &tasks);
 
-	// clean vector
-	std::this_thread::sleep_for(std::chrono::seconds(2));
+	// Wait for the filling of the vector, and then run the cleanup.
+	pthread_join(inserter, NULL);
 	std::for_each(keys.begin(), keys.end(), [&](int key) {
 		pthread_rwlock_wrlock(&rwlock);
+		std::cout << "oT! " << std::this_thread::get_id() << std::endl;
 		tree4.remove(distribution(generator));
-		pthread_rwlock_unlock(&rwlock);
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	});
+		std::this_thread::sleep_for(
+				std::chrono::milliseconds(distribution(generator) / 16)); //sleep
+			pthread_rwlock_unlock(&rwlock);
+		});
 
 	// wait for all threads to complete.
 	for (auto thread : threads)
 		pthread_join(thread, NULL);
-	pthread_join(inserter, NULL);
 
 	pthread_rwlock_destroy(&rwlock);
 	return 0;

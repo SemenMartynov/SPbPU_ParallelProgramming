@@ -28,7 +28,6 @@ int main(int argc, char* argv[]) {
 	std::vector<int> keys(10000); // vector with 10000 ints.
 	std::iota(keys.begin(), keys.end(), 0); // Fill with 0, 1, ..., 9999.
 
-	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shuffle
 	int nthreads, tid;
 	/* Fork a team of threads with each thread having a private tid variable */
 #pragma omp parallel private(tid)
@@ -39,14 +38,25 @@ int main(int argc, char* argv[]) {
 
 		/* Only master thread does this */
 		if (tid == 0) {
-			nthreads = omp_get_num_threads();
-			std::cout << "Number of threads = " << nthreads << std::endl;
-			std::for_each(keys.begin(), keys.end(), [&tree4](int key) { // add
+			std::cout << "Number of threads = " << omp_get_num_threads()
+					<< std::endl;
+
+			std::random_shuffle(std::begin(keys), std::end(keys)); // the first shuffle
+			std::for_each(keys.begin(), keys.end(), [&](int key) { // add
 						tree4.insert(key);
+						std::this_thread::sleep_for(
+								std::chrono::milliseconds(distribution(generator) / 16));//sleep
 					});
+
+			// I would like to place delete-records-code here,
+			// but there is no RWLocak in OpenMP
 		} else { // In other parallel threads
+			// Get threads number
+			nthreads = omp_get_num_threads() - 1;
+			if (nthreads < 1)
+				nthreads = 1;
 #pragma omp parallel for
-			for (int i = 0; i < 100; ++i) {
+			for (int i = 0; i < task_size / nthreads; ++i) {
 				int key = distribution(generator);
 				std::cout << "#" << tid << " Searching for key " << key << "..."
 						<< std::endl;
@@ -56,12 +66,12 @@ int main(int argc, char* argv[]) {
 						std::chrono::milliseconds(distribution(generator) / 2));
 			}
 		}
-
 	} /* All threads join master thread and terminate */
-
 	std::random_shuffle(std::begin(keys), std::end(keys)); // the second shuffle
-	std::for_each(keys.begin(), keys.end(), [&tree4](int key) { // remove
+	std::for_each(keys.begin(), keys.end(), [&](int key) { // remove
 				tree4.remove(key);
+				std::this_thread::sleep_for(
+						std::chrono::milliseconds(distribution(generator) / 16));//sleep
 			});
 
 	return 0;

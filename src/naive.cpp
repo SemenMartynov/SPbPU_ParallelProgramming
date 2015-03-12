@@ -10,7 +10,7 @@
 
 int main(int argc, char* argv[]) {
 	if (argc != 2) {
-		std::cout << "Too few parameters.!" << std::endl;
+		std::cout << "Too few parameters!" << std::endl;
 		exit(1);
 	}
 	std::istringstream ss(argv[1]);
@@ -28,10 +28,16 @@ int main(int argc, char* argv[]) {
 	std::iota(keys.begin(), keys.end(), 0); // Fill with 0, 1, ..., 9999.
 
 	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shuffle
-	std::for_each(keys.begin(), keys.end(), [&tree4](int key) { // add
-				tree4.insert(key);
-			});
+	std::for_each(keys.begin(), keys.end(), [&](int key) {
+		tree4.insert(key); // add new key
+			std::this_thread::sleep_for(
+					std::chrono::milliseconds(
+							distribution(generator) / 16));//sleep
 
+		});
+
+	// The cycle will be performed as many times
+	// as specified in the variable task_size.
 	for (int i = 0; i != task_size; ++i) {
 		int key = distribution(generator);
 		std::cout << "Searching for key " << key << "..." << std::endl;
@@ -42,8 +48,11 @@ int main(int argc, char* argv[]) {
 	}
 
 	std::random_shuffle(std::begin(keys), std::end(keys)); // the second shuffle
-	std::for_each(keys.begin(), keys.end(), [&tree4](int key) { // remove
+	std::for_each(keys.begin(), keys.end(), [&](int key) { // remove
 				tree4.remove(key);
+				std::this_thread::sleep_for(
+						std::chrono::milliseconds(
+								distribution(generator) / 16));//sleep
 			});
 
 	exit(0);
