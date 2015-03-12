@@ -2,10 +2,10 @@
 #include <numeric>
 #include <algorithm>
 #include "gtest/gtest.h"
-#include "BTree.h"
+#include "btree/BTree.h"
 
 TEST(BTree3Test, Add) {
-	BTree tree3(3); // A B-Tree with minium degree 3
+	BTree tree3(3); // A B-Tree with minimum degree 3
 
 	tree3.insert(1);
 	EXPECT_EQ(tree3.to_str(), " [ 1 ]");
@@ -26,7 +26,7 @@ TEST(BTree3Test, Add) {
 }
 
 TEST(BTree3Test, Remove) {
-	BTree tree3(3); // A B-Tree with minium degree 3
+	BTree tree3(3); // A B-Tree with minimum degree 3
 
 	tree3.insert(1);
 	EXPECT_EQ(tree3.to_str(), " [ 1 ]");
@@ -48,13 +48,13 @@ TEST(BTree3Test, Remove) {
 }
 
 TEST(BTree3Test, EmptyRemove) {
-	BTree tree3(3); // A B-Tree with minium degree 3
+	BTree tree3(3); // A B-Tree with minimum degree 3
 
 	ASSERT_FALSE(tree3.remove(7));
 }
 
 TEST(BTree3Test, BigTest) {
-	BTree tree3(3); // A B-Tree with minium degree 3
+	BTree tree3(3); // A B-Tree with minimum degree 3
 
 	tree3.insert(1);
 	tree3.insert(3);
@@ -94,7 +94,7 @@ TEST(BTree3Test, BigTest) {
 }
 
 TEST(BTree4Test, BigTest) {
-	BTree tree4(4); // A B-Tree with minium degree 4
+	BTree tree4(4); // A B-Tree with minimum degree 4
 
 	tree4.insert(1);
 	tree4.insert(3);
@@ -134,18 +134,18 @@ TEST(BTree4Test, BigTest) {
 }
 
 TEST(BTree4Test, EmptyRemove) {
-	BTree tree4(4); // A B-Tree with minium degree 4
+	BTree tree4(4); // A B-Tree with minimum degree 4
 
 	ASSERT_FALSE(tree4.remove(7));
 }
 
 TEST(BTree4Test, RandomTest) {
-	BTree tree4(4); // A B-Tree with minium degree 4
+	BTree tree4(4); // A B-Tree with minimum degree 4
 
 	std::vector<int> keys(1000); // vector with 1000 ints.
 	std::iota(keys.begin(), keys.end(), 0); // Fill with 0, 1, ..., 999.
 
-	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shufle
+	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shuffle
 	std::for_each(keys.begin(), keys.end(), [&tree4](int key) { // add
 				tree4.insert(key);
 			});
@@ -154,7 +154,7 @@ TEST(BTree4Test, RandomTest) {
 	ASSERT_TRUE(tree4.exist(17));
 	ASSERT_TRUE(tree4.exist(77));
 
-	std::random_shuffle(std::begin(keys), std::end(keys)); // the second shufle
+	std::random_shuffle(std::begin(keys), std::end(keys)); // the second shuffle
 	std::for_each(keys.begin(), keys.end(), [&tree4](int key) { // remove
 				tree4.remove(key);
 			});
@@ -163,7 +163,7 @@ TEST(BTree4Test, RandomTest) {
 }
 
 TEST(BTree2Test, BigTest) {
-	BTree tree2(2); // A B-Tree with minium degree 2
+	BTree tree2(2); // A B-Tree with minimum degree 2
 
 	tree2.insert(1);
 	tree2.insert(3);

@@ -1,10 +1,13 @@
 #include <iostream>
 #include <numeric>
 #include <algorithm>
+#include <sstream>
+
 #include <chrono>
 #include <thread>
+
 #include <omp.h>
-#include "BTree.h"
+#include "btree/BTree.h"
 
 int main(int argc, char* argv[]) {
 	if (argc != 2) {
