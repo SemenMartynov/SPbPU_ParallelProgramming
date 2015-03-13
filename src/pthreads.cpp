@@ -9,14 +9,16 @@
 #include <pthread.h>
 #include "btree/BTree.h"
 
+#define keys_number 1000
+
 pthread_rwlock_t rwlock;
 BTree tree4(4); // B-Tree with minimum degree 4
 
-std::vector<int> keys(1000); // vector with 10000 ints.
+std::vector<int> keys(keys_number); // vector with keys_number ints.
 
 // random generator
 std::default_random_engine generator;
-std::uniform_int_distribution<int> distribution(0, 1000);
+std::uniform_int_distribution<int> distribution(0, keys_number);
 
 void* check(void* param) {
 	int tasks = *(int*) param;
@@ -24,7 +26,6 @@ void* check(void* param) {
 	for (int i = 0; i != tasks; ++i) {
 		pthread_rwlock_rdlock(&rwlock);
 		int key = distribution(generator);
-		std::cout << "oo! " << std::this_thread::get_id() << std::endl;
 		std::cout << "Searching for key " << key << "..." << std::endl;
 		if (tree4.exist(key)) {
 			std::cout << "Key " << key << " is found!" << std::endl;
@@ -41,7 +42,6 @@ void* insert(void* param) {
 	// feel vector
 	std::for_each(keys.begin(), keys.end(), [&](int key) {
 		pthread_rwlock_wrlock(&rwlock);
-		std::cout << "To! " << std::this_thread::get_id() << std::endl;
 		tree4.insert(key);
 		std::this_thread::sleep_for(
 				std::chrono::milliseconds(distribution(generator) / 16)); //sleep
@@ -86,7 +86,6 @@ int main(int argc, char* argv[]) {
 	pthread_join(inserter, NULL);
 	std::for_each(keys.begin(), keys.end(), [&](int key) {
 		pthread_rwlock_wrlock(&rwlock);
-		std::cout << "oT! " << std::this_thread::get_id() << std::endl;
 		tree4.remove(distribution(generator));
 		std::this_thread::sleep_for(
 				std::chrono::milliseconds(distribution(generator) / 16)); //sleep

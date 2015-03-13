@@ -9,10 +9,12 @@
 
 #include "btree/BTree.h"
 
+#define keys_number 1000
+
 // std::shared_mutex will be part of the C++14 Standard Library
 int main(int argc, char* argv[]) {
 	if (argc != 2) {
-		std::cout << "Too few parameters.!" << std::endl;
+		std::cout << "Too few parameters!" << std::endl;
 		exit(1);
 	}
 	std::istringstream ss(argv[1]);
@@ -23,10 +25,10 @@ int main(int argc, char* argv[]) {
 	}
 
 	std::default_random_engine generator;
-	std::uniform_int_distribution<int> distribution(0, 10000);
+	std::uniform_int_distribution<int> distribution(0, keys_number);
 	BTree tree4(4); // B-Tree with minimum degree 4
 
-	std::vector<int> keys(10000); // vector with 10000 ints.
+	std::vector<int> keys(keys_number); // vector with keys_number ints.
 	std::iota(keys.begin(), keys.end(), 0); // Fill with 0, 1, ..., 9999.
 
 	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shuffle
@@ -37,10 +39,10 @@ int main(int argc, char* argv[]) {
 			});
 
 	std::cout << "Main thread id: " << std::this_thread::get_id() << std::endl;
-	std::vector<std::future<void>> futures(task_size);
+	std::vector<std::future<void>> futures;
 
-	for (int i = 0; i < task_size; ++i) {
-		auto fut = std::async([&]
+	for (int i = 0; i != task_size; ++i) {
+		auto fut = std::async(std::launch::async, [&]
 		{
 			int key = distribution(generator);
 			std::cout << "Searching for key " << key << "..." << std::endl;

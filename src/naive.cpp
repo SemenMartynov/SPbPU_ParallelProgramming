@@ -8,6 +8,8 @@
 
 #include "btree/BTree.h"
 
+#define keys_number 1000
+
 int main(int argc, char* argv[]) {
 	if (argc != 2) {
 		std::cout << "Too few parameters!" << std::endl;
@@ -21,19 +23,19 @@ int main(int argc, char* argv[]) {
 	}
 
 	std::default_random_engine generator;
-	std::uniform_int_distribution<int> distribution(0, 10000);
+	std::uniform_int_distribution<int> distribution(0, keys_number);
 	BTree tree4(4); // B-Tree with minimum degree 4
 
-	std::vector<int> keys(10000); // vector with 10000 ints.
+	std::vector<int> keys(keys_number); // vector with keys_number ints.
 	std::iota(keys.begin(), keys.end(), 0); // Fill with 0, 1, ..., 9999.
 
 	std::random_shuffle(std::begin(keys), std::end(keys)); // the first shuffle
 	std::for_each(keys.begin(), keys.end(), [&](int key) {
+		std::cout << "add" << std::endl;
 		tree4.insert(key); // add new key
 			std::this_thread::sleep_for(
 					std::chrono::milliseconds(
 							distribution(generator) / 16));//sleep
-
 		});
 
 	// The cycle will be performed as many times
